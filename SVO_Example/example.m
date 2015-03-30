@@ -51,8 +51,12 @@ for ii = 1:T/Ts-1
     xminus(:,ii) = xhat-d/2;
     x(:,ii+1) = An*x(:,ii)+Bn*u(:,ii)+Ln*w(:,ii);
 end
+%%
+figure('units','centimeters','position',[0 0 12 7])
+h = create_axis([1 0.1 0.35 0.1],[1 0.2 0.1 0.1]);
 plot(1:T/Ts-1,[x(1,1:end-1)' xminus(1,1:end-1)' xplus(1,1:end-1)' y(:,1:end-1)'])
 grid on
 xlabel('Time [s]')
 ylabel('Blade Pitch [deg]')
-legend({'$x(kT_s)$','$x^-(kT_s)$','$x^+(kT_s)$','$y_1(kT_s)$','$y_2(kT_s)$'})
+legend({'$x(kT_s)$','$x^-(kT_s)$','$x^+(kT_s)$','$y_1(kT_s)$','$y_2(kT_s)$'},'position',[0.7, 0.2 0.25 0.7])
+matlabfrag('../../blade')
