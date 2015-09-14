@@ -18,8 +18,12 @@ REFERENCES
 If you find the contents of this toolbox, please use the reference the following paper:
 
 @inproceedings{casau_fitbox_2015,
+
 	title = {{FITBOX} -- {A} {Fault} {Isolation} {Toolbox}},
+	
 	booktitle = {International {Symposium} on {Fault} {Detection}, {Supervision} and {Safety} of {Technical} {Processes}},
+	
 	author = {Casau, P. and Rosa, P. and Silvestre, C.},
+	
 	year = {2015}
 }
