@@ -15,7 +15,7 @@ CONTENTS
 REFERENCES
 =========
 
-If you find the contents of this toolbox, please use the reference the following paper:
+If you find the contents of this toolbox, please credit our work by referencing the following paper:
 ```
 @inproceedings{casau_fitbox_2015,
 	title = {{FITBOX} -- {A} {Fault} {Isolation} {Toolbox}},
