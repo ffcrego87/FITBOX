@@ -1,6 +1,8 @@
 function [M,m] = reduce_rows(A,b)
 
-zerotol = 1e-6;
+size(A)
+
+zerotol = 1e-9;
 
 %normalize
 a = sqrt(sum(A.*A,2));
@@ -11,7 +13,7 @@ idx = a>zerotol;
 A = A(idx,:);
 b = b(idx,:);
 [m,n] = size(A);
-aux = A*A';
+
 %check if full-dimensional
 [~,fval,exitflag,~,lambda] = linprog(-[zeros(1,n) 1],[A ones(m,1)],b);
 if exitflag < 0
@@ -37,7 +39,7 @@ idx = false(m,1) & ~E;
 for i = 1:m
     if ~E(i)
         jdx = abs(A(~E,:)*A(i,:)')>zerotol;
-        [~,~,exitflag,~,lambda] = linprog(-1,A(jdx,:)*A(i,:)',b(jdx));
+        [~,~,exitflag,~,lambda] = linprog(-A(i,:),A(jdx,:),b(jdx));
         if exitflag < 0
             ME = MException('reduce_rows:LP_error',...
                 'LINGPROG failed to execute. Exitflag = %i',exitflag);

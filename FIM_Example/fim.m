@@ -199,16 +199,16 @@ classdef fim < handle
                 %prevents further access to addSVO
                 obj.update_flag = true;
                 %%%NEWER CODE%%%
-                %schd = parcluster(parallel.defaultClusterProfile);
-                %obj.numWorkers = schd.NumWorkers;
+                schd = parcluster(parallel.defaultClusterProfile);
+                obj.numWorkers = schd.NumWorkers;
                 %%if available, 1 worker per SVO is selected
-                %matlabpool(parallel.defaultClusterProfile,min(obj.numWorkers,obj.nSVO));
+                parpool(parallel.defaultClusterProfile,min(obj.numWorkers,obj.nSVO));
                 %%%%%%%%%%%%%%%%
                 %%%CODE FOR MATLAB 2011a Compatibility%%%
-                schd = findResource('scheduler', 'configuration', 'local');
-                obj.numWorkers = schd.ClusterSize;
+                %schd = findResource('scheduler', 'configuration', 'local');
+                %obj.numWorkers = schd.ClusterSize;
                 %if available, 1 worker per SVO is selected
-                matlabpool('local',min(obj.numWorkers,obj.nSVO));
+                %parpool('local',min(obj.numWorkers,obj.nSVO));
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             end
             %%%%%%%%%%%%%% PARALLEL COMPUTING ROUTINE %%%%%%%%%%%%%%
@@ -378,7 +378,7 @@ classdef fim < handle
         function delete(obj)
             %class destructor
             if obj.numWorkers ~= 0
-                matlabpool close
+                delete(gcp('nocreate'))
             end
         end
     %end

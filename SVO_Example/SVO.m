@@ -160,14 +160,14 @@ classdef SVO < handle
             for I=1:l
                 [x_low,~,status_low] = obj.LPsolve(aux(idx(I),:),P,p);
                 [x_upr,~,status_upr] = obj.LPsolve(-aux(idx(I),:),P,p);
-                upr(I) = x_upr(idx(I));
-                low(I) = x_low(idx(I));
                 if all(status_upr ~= [1 5]) || all(status_low ~= [1 5])
                     warning(['The set will be considered empty. Exitflags: ' num2str([status_upr status_low])]); 
                     empty = true;
                     M = [];
                     return
                 end
+                upr(I) = x_upr(idx(I));
+                low(I) = x_low(idx(I));
             end
             empty = false;
             M = [eye(l),upr;
@@ -583,8 +583,11 @@ classdef SVO < handle
         
         function [Mx,mx,empty] = projection(obj,idx)
             if strcmpi(obj.approximation,'none')
-                h = fourier([obj.M(:,1:obj.nx),obj.M(:,obj.nx+1:end),obj.m],...
-                    idx,obj.numTol,obj.angTol);
+                %[A_aux,b] = fourmotz([obj.M(:,setdiff(1:end,idx)),obj.M(:,idx)],obj.m,numel(idx));
+                %h=[A_aux b];
+                R = polytope(obj.M,obj.m);
+                Q = projection(R,idx);
+                h=double(Q);
                 empty = obj.isempty();
             else
                 [h,empty] = obj.boundingBox(obj.M,obj.m,idx);
@@ -685,14 +688,10 @@ classdef SVO < handle
             obj.m = [x+u;u-x];
         end
         function [x,u] = getStateEstimate(obj)
-            if ~strcmpi(obj.approximation,'hypercube')
-                ME = MException('SVO:getStateEstimate:invalidSVOsetting',...
-                    'getStateEstimate requires the SVO to have the property "approximation" set to "hypercube"');
-                throw(ME);
-            end
             a = 1+obj.nAd*obj.nx*(obj.nCd+1)+obj.nCd*obj.nx;
             b = a+obj.nx-1;
-            [~,h] = obj.projection(a:b);
+            [h,~] = obj.boundingBox(obj.M,obj.m,a:b);
+            h=h(:,end);
             x_upr = h(1:obj.nx);
             x_lwr = -h(obj.nx+1:2*obj.nx);
             x = mean([x_upr,x_lwr],2);

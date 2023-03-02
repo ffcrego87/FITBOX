@@ -1,13 +1,13 @@
-if ~exist('T_init')
+if ~exist('T_init','var')
     T_init = 0;
 end
-if ~exist('T_limit')
+if ~exist('T_limit','var')
     T_limit = 10;
 end
-if ~exist('Ts')
+if ~exist('Ts','var')
     Ts = 0.01; %sample time [s]
 end
-if ~exist('fsgn1') || ~exist('fsgn2') || ~exist('fsgn3')
+if ~exist('fsgn1','var') || ~exist('fsgn2','var') || ~exist('fsgn3','var')
     %set default fault signals
     time = (T_init:Ts:T_limit)';
     fsgn1 = ones(size(time));
